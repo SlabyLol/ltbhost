@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>LTBHost</title>
+    <style>
+        body, html { margin:0; height:100%; background:black; }
+        #screen_container { width:100%; height:100vh; }
+    </style>
+</head>
+<body>
+    <div id="screen_container"></div>
+
+    <script type="module">
+        import { V86Starter } from 'https://cdn.skypack.dev/v86';
+
+        new V86Starter({
+            screen_container: document.getElementById("screen_container"),
+            wasm_fn: async (importObject) => {
+                const wasmModule = await WebAssembly.instantiateStreaming(
+                    fetch('https://cdn.skypack.dev/v86/build/v86.wasm'),
+                    importObject
+                );
+                return wasmModule.instance.exports;
+            },
+            bios: { url: "bios/seabios.bin" },
+            vga_bios: { url: "bios/vgabios.bin" },
+            hda: { url: "sanos-hda.img" },
+            autostart: true,
+        });
+    </script>
+</body>
+</html>
